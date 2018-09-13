@@ -50,12 +50,50 @@ Operators:
 
 * Comparisons: ``<=``, ``<``, ``==``, ``!=``, ``>=``, ``>`` (evaluate to ``bool``)
 * Bit operators: ``&``, ``|``, ``^`` (bitwise exclusive or), ``~`` (bitwise negation)
-* Arithmetic operators: ``+``, ``-``, unary ``-``, unary ``+``, ``*``, ``/``, ``%`` (remainder), ``**`` (exponentiation), ``<<`` (left shift), ``>>`` (right shift)
+* Arithmetic operators: ``+``, ``-``, unary ``-``, ``*``, ``/``, ``%`` (remainder), ``**`` (exponentiation), ``<<`` (left shift), ``>>`` (right shift)
 
-Division always truncates (it is just compiled to the ``DIV`` opcode of the EVM), but it does not truncate if both
-operators are :ref:`literals<rational_literals>` (or literal expressions).
+
+Comparisons
+~~~~~~~~~~~
+
+The value of a comparison is the one obtained by comparing the integer value.
+
+Bit operations
+~~~~~~~~~~~~~~
+
+Bit operations are performed on the two's complement representation of the number.
+This means that, for example ``~int256(0) == int256(-1)``.
+
+Division and Modulus
+~~~~~~~~~~~~~~~~~~~~
+
+Since the type of the result of an operation is always the type of one of
+the operands, division on integers always results in an integer.
+In Solidity, division rounds towards zero. This mean that ``int256(-5) / int256(2) == int256(-2)``.
+
+Note that in contrast, division on :ref:`literals<rational_literals>` results in fractional values
+of arbitrary precision.
 
 Division by zero and modulus with zero throws a runtime exception.
+
+Addition, Subtraction and Multiplication
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Addition, subtraction and multiplication have the usual semantics.
+They wrap in two's complement notation, meaning that
+for example ``uint256(0) - uint256(1) == 2**256 - 1``. You have to take these overflows
+into account when designing safe smart contracts.
+
+Exponentiation
+~~~~~~~~~~~~~~
+
+Exponentiation is only available for unsigned types. Please take care that the types
+you are using are large enough to hold the result and prepare for potential wrapping behaviour.
+
+Note that ``0**0`` is defined by the EVM as ``1``.
+
+Shifts
+~~~~~~
 
 The result of a shift operation is the type of the left operand. The
 expression ``x << y`` is equivalent to ``x * 2**y``, and, for positive integers,
