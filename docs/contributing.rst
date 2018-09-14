@@ -100,7 +100,7 @@ Travis CI even runs some additional tests (including ``solc-js`` and testing thi
 .. note ::
 
     While any version of ``cpp-ethereum`` should be usable, this cannot be guaranteed, and it is suggested to use the same version that is used by the Solidity continuous integration tests.
-    Currently the CI uses ``d661ac4fec0aeffbedcdc195f67f5ded0c798278`` of ``cpp-ethereum``.
+    Currently the CI uses version ``1.4.0rc6`` of ``cpp-ethereum``.
 
 Writing and running syntax tests
 --------------------------------
