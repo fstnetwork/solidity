@@ -1,28 +1,14 @@
 #!/usr/bin/env bash
-
-if [ -z "$1" ]; then
-    BUILD_TYPE=Release
-else
-    BUILD_TYPE="$1"
-fi
-
 cd $(dirname "$0")/.. &&
 
-if [[ "$(git tag --points-at HEAD 2>/dev/null)" == v* ]]; then
-	touch prerelease.txt
-fi
+touch prerelease.txt
 
 mkdir -p build &&
 cd build &&
-cmake .. -DCMAKE_BUILD_TYPE="$BUILD_TYPE" &&
-make -j2
+cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS='-march=native -O3 -pipe' -DCMAKE_CXX_FLAGS='-march=native -O3 -pipe' &&
+make -j16
 
 if [ $? -ne 0 ]; then
 	echo "Failed to build"
 	exit 1
-fi
-
-if [ -z $CI ]; then
-	echo "Installing solc and soltest"
-	install solc/solc /usr/local/bin && install test/soltest /usr/local/bin
 fi
